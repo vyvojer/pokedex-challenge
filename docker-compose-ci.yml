@@ -1,0 +1,20 @@
+services:
+  app:
+    image: ${IMAGE_TAG}
+    depends_on:
+      - postgres
+    container_name: pokedex
+    env_file:
+      - .envs/.app
+      - .envs/.postgres
+    volumes:
+      - .:/app
+    command: scripts/start.sh
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    volumes:
+      - ./_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .envs/.postgres
