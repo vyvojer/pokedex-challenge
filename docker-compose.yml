@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfiles/development/Dockerfile
+    depends_on:
+      - postgres
+    container_name: pokedex
+    env_file:
+      - .envs/.app
+      - .envs/.postgres
+    volumes:
+      - .:/app
+    command: scripts/start.sh
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    volumes:
+      - ./_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .envs/.postgres
+
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./nginx_config/default.conf:/etc/nginx/templates/default.conf.template
+      - ./static/:/static/
+      - ./media/:/media/
+    env_file:
+      - .envs/.nginx
+    depends_on:
+      - app
+    ports:
+      - 80:80

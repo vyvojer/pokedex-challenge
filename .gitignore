@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+.idea
+.code
+.envs
+
+*.log
+*.http
+
+/static/
+/ansible/hosts
+_postgres_data/

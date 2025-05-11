@@ -1,0 +1,8 @@
+.gitignore
+.github
+.git
+dockerfiles
+ngnix_config
+ansible
+_postgres_data_doprava
+docker-compose*.yml

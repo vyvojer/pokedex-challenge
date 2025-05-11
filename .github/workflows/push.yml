@@ -1,0 +1,123 @@
+name: Push Workflow
+
+on:
+  push:
+    branches-ignore:
+      - master
+    tags-ignore:
+      - production*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.tag }} # Output the tag for other jobs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set image tag
+        id: set_tag
+        run: echo "tag=myapp:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Build and Load Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/development/Dockerfile
+          tags: ${{ steps.set_tag.outputs.tag }}
+          push: false # Don't push yet
+          load: true # Load into the runner's Docker daemon
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save Docker image as artifact
+        run: docker save ${{ steps.set_tag.outputs.tag }} -o myapp-image.tar
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: myapp-image
+          path: myapp-image.tar
+
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: myapp-image
+
+      - name: Load Docker image
+        run: docker load -i myapp-image.tar
+
+      - name: Create env files
+        run: |
+          mkdir -p .envs
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .envs/.app
+          echo -e "POSTGRES_HOST=postgres" > .envs/.postgres
+          echo -e "POSTGRES_PORT=5432" >> .envs/.postgres
+          echo -e "POSTGRES_DB=pokedex" >> .envs/.postgres
+          echo -e "POSTGRES_USER=pokedex" >> .envs/.postgres
+          echo -e "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .envs/.postgres
+
+      - name: Run tests
+        run: |
+          IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose-ci.yml run --rm -T app ./scripts/tests.sh
+
+  isort:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: myapp-image
+
+      - name: Load Docker image
+        run: docker load -i myapp-image.tar
+
+      - name: Create empty env files
+        run: |
+          mkdir -p .envs
+          touch .envs/.app
+          touch .envs/.postgres
+
+      - name: Run isort check
+        run: |
+          IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose-ci.yml run --rm -T app ./scripts/isort.sh
+
+  black:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: myapp-image
+
+      - name: Load Docker image
+        run: docker load -i myapp-image.tar
+
+      - name: Create empty env files
+        run: |
+          mkdir -p .envs
+          touch .envs/.app
+          touch .envs/.postgres
+
+      - name: Run black check
+        run: |
+          IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose-ci.yml run --rm -T app ./scripts/black.sh
