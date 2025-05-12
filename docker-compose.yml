@@ -6,12 +6,28 @@ services:
     depends_on:
       - postgres
     container_name: pokedex
+    image: pokedex
     env_file:
       - .envs/.app
       - .envs/.postgres
+      - .envs/.redis
     volumes:
       - .:/app
     command: scripts/start.sh
+
+  celery-worker:
+    container_name: celery-worker
+    image: pokedex
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .envs/.app
+      - .envs/.postgres
+      - .envs/.redis
+    volumes:
+      - .:/app
+    command: scripts/start_worker.sh
 
   postgres:
     image: postgres:15
@@ -21,6 +37,19 @@ services:
     env_file:
       - .envs/.postgres
 
+  redis:
+    image: redis:8-alpine
+    container_name: pokedex-redis
+
+  flower:
+    image: mher/flower
+    container_name: pokedex-flower
+    env_file:
+      - .envs/.redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
 
   nginx:
     image: nginx

@@ -7,6 +7,7 @@ services:
     env_file:
       - .envs/.app
       - .envs/.postgres
+      - .envs/.redis
     volumes:
       - .:/app
     command: scripts/start.sh
@@ -18,3 +19,8 @@ services:
       - ./_postgres_data:/var/lib/postgresql/data
     env_file:
       - .envs/.postgres
+
+  redis:
+    image: redis:8-alpine
+    container_name: pokedex-redis
+

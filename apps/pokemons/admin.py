@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Pokemon, Type
+from .models import Pokemon, PokemonType, Type
 
 # Register your models here.
 
@@ -11,11 +11,25 @@ class TypeAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
+class PokemonTypeInline(
+    admin.TabularInline
+):  # or admin.StackedInline for a different layout
+    model = PokemonType
+    extra = 0
+    can_delete = False
+    readonly_fields = ["type", "slot"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Pokemon)
 class PokemonAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
     search_fields = ["name"]
-    filter_horizontal = ["types"]
-    list_select_related = ["types"]
+    list_select_related = True
 
-    autocomplete_fields = ["types"]
+    inlines = [PokemonTypeInline]
