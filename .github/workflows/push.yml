@@ -67,6 +67,8 @@ jobs:
           echo -e "POSTGRES_DB=pokedex" >> .envs/.postgres
           echo -e "POSTGRES_USER=pokedex" >> .envs/.postgres
           echo -e "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .envs/.postgres
+          echo -e "REDIS_HOST=redis" >> .envs/.redis
+          echo -e "REDIS_PORT=6379" >> .envs/.redis
 
       - name: Run tests
         run: |
@@ -92,6 +94,7 @@ jobs:
           mkdir -p .envs
           touch .envs/.app
           touch .envs/.postgres
+          touch .envs/.redis
 
       - name: Run isort check
         run: |
@@ -117,6 +120,7 @@ jobs:
           mkdir -p .envs
           touch .envs/.app
           touch .envs/.postgres
+          touch .envs/.redis
 
       - name: Run black check
         run: |

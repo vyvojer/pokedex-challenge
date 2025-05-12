@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_beat",
     "pokemons",
 ]
 
@@ -130,6 +131,44 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 APP_VERSION = (BASE_DIR / Path("version.txt")).read_text()
 
+# CELERY
+
+# CELERY
+CELERY_TIMEZONE = TIME_ZONE
+REDIS_HOST = os.environ["REDIS_HOST"]
+REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "visibility_timeout": float("inf"),
+    "result_chord_ordered": True,
+}
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/2"
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_ALWAYS_EAGER = False
+
+
+# DATA SOURCES
+
+DATA_SOURCES = {
+    "pokemon": {
+        "page_loader": {
+            "class": "core.integrations.loaders.PageLoader",
+            "kwargs": {"url": "https://pokeapi.co/api/v2/pokemon/"},
+        },
+        "entity_loader": {
+            "class": "core.integrations.loaders.EntityLoader",
+        },
+        "transformer": {
+            "class": "core.integrations.transformers.PokemonTransformer",
+        },
+        "updater": {
+            "class": "core.integrations.updaters.PokemonUpdater",
+            "kwargs": {"model_name": "pokemons.Pokemon"},
+        },
+    }
+}
+
 # LOGGING
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
@@ -170,6 +209,10 @@ LOGGING = {
             "level": LOG_LEVEL,
         },
         "pokemons": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+        },
+        "core": {
             "handlers": ["console"],
             "level": LOG_LEVEL,
         },
