@@ -1,0 +1,96 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #ef5350; /* PokeAPI red color */
+    color: white;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.sidebar.hidden {
+    margin-left: -200px;
+}
+
+.content-area {
+    flex: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 10px;
+}
+
+.sidebar-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.sidebar-nav a:hover {
+    color: #ffe0e0; /* Lighter red on hover */
+}
+
+#sidebarToggle {
+    cursor: pointer;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* PokeAPI theme styles */
+.navbar {
+    background-color: #ef5350 !important; /* Override Bootstrap navbar color */
+}
+
+.navbar-brand {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.card-header {
+    background-color: #ef5350;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #ef5350;
+    border-color: #ef5350;
+}
+
+.btn-primary:hover {
+    background-color: #e53935;
+    border-color: #e53935;
+}
+
+.badge.bg-primary {
+    background-color: #ef5350 !important;
+}
+
+.page-item.active .page-link {
+    background-color: #ef5350;
+    border-color: #ef5350;
+}
+
+.page-link {
+    color: #ef5350;
+}
+
+.page-link:hover {
+    color: #e53935;
+}
