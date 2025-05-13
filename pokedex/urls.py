@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 admin.site.site_header = f"Pokedex Challenge v{settings.APP_VERSION}"
 admin.site.site_title = f"Pokedex Challenge v{settings.APP_VERSION}"
@@ -25,6 +25,7 @@ admin.site.site_title = f"Pokedex Challenge v{settings.APP_VERSION}"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("pokemons.urls", namespace="pokemons")),
 ]
 
 if settings.ENVIRONMENT == "development":

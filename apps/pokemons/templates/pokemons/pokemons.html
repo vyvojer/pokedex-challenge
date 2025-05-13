@@ -1,0 +1,60 @@
+{% extends 'pokedex/base.html' %}
+{% load static %}
+
+{% block title %}Pokemon List{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4">Pokemon List</h1>
+
+        <!-- Filter Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Filters</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" id="filter-form" hx-get="{% url 'pokemons:pokemon_list' %}" hx-target="#pokemon-list"
+                      hx-trigger="submit, change">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_name__icontains" class="form-label">Name</label>
+                                <input type="text" name="name__icontains" id="id_name__icontains" class="form-control"
+                                       value="{{ filter.form.name__icontains.value|default:'' }}"
+                                       hx-get="{% url 'pokemons:pokemon_list' %}"
+                                       hx-target="#pokemon-list"
+                                       hx-trigger="keyup delay:250ms changed">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_o" class="form-label">Order by</label>
+                                <select name="o" id="id_o" class="form-select">
+                                    <option value="">---------</option>
+                                    <option value="id" {% if filter.form.o.value == 'id' %}selected{% endif %}>ID
+                                        (ascending)
+                                    </option>
+                                    <option value="-id" {% if filter.form.o.value == '-id' %}selected{% endif %}>ID
+                                        (descending)
+                                    </option>
+                                    <option value="name" {% if filter.form.o.value == 'name' %}selected{% endif %}>Name
+                                        (A-Z)
+                                    </option>
+                                    <option value="-name" {% if filter.form.o.value == '-name' %}selected{% endif %}>
+                                        Name (Z-A)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{% url 'pokemons:pokemon_list' %}" class="btn btn-primary">Reset</a>
+                </form>
+            </div>
+        </div>
+
+        <div id="pokemon-list">
+            {% include 'pokemons/pokemon_list.html' %}
+        </div>
+    </div>
+
+{% endblock %}

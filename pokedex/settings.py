@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_celery_beat",
+    "pokedex",
     "pokemons",
 ]
 
@@ -55,7 +56,7 @@ ROOT_URLCONF = "pokedex.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "pokedex", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
