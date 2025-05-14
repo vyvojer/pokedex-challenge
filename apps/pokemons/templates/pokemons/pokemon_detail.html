@@ -1,0 +1,33 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Pokemon {{ object.name }}</h5>
+    </div>
+
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>ID:</strong> {{ object.id }}
+                </div>
+                <div class="mb-3">
+                    <strong>Name:</strong> {{ object.name }}
+                </div>
+                <div>
+                    <strong>Types:</strong>
+                    <ul class="list-group mt-2">
+                        {% for pokemon_type in object.pokemontype_set.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ pokemon_type.type.name }}</span>
+                                <span class="badge bg-primary rounded-pill">Slot: {{ pokemon_type.slot }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+    </div>
+</div>
