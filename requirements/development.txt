@@ -1,5 +1,5 @@
 -r base.txt
 black==25.1.0
-django-debug-toolbar==5.1.0
+django-debug-toolbar==5.2.0
 django-extensions==3.2.3
 isort==6.0.0

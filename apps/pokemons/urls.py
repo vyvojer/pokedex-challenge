@@ -2,8 +2,8 @@ from django.urls import path
 
 from . import views
 
-app_name = 'pokemons'
+app_name = "pokemons"
 
 urlpatterns = [
-    path('', views.PokemonListView.as_view(), name='pokemon_list'),
+    path("", views.PokemonListView.as_view(), name="pokemon_list"),
 ]
