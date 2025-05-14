@@ -1,22 +1,29 @@
 from django.db import models
-
-# Create your models here.
+from pokemons.querysets import PokemonQuerySet
 
 
 class Type(models.Model):
     name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
 
 
 class Pokemon(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, db_index=True)
     types = models.ManyToManyField(
         Type,
         through="PokemonType",
         related_name="pokemons",
     )
+
+    objects = PokemonQuerySet.as_manager()
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return self.name

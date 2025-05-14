@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_celery_beat",
+    "rest_framework",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
     "pokedex",
     "pokemons",
 ]
@@ -148,6 +151,33 @@ CELERY_TASK_IGNORE_RESULT = True
 CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_ALWAYS_EAGER = False
 
+# DRF
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 100,
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+# DRF Spectacular
+
+SPECTACULAR_SETTINGS = {
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+    "TITLE": "iDoprava API",
+    "DESCRIPTION": "iDoprava REST API",
+    "VERSION": "1",
+}
+
 
 # DATA SOURCES
 
@@ -250,8 +280,10 @@ NOTEBOOK_ARGUMENTS = [
     "--no-browser",
 ]
 
+TESTING = "test" in sys.argv
+
 # DJANGO DEBUG TOOLBAR
-if ENVIRONMENT == "development":
+if ENVIRONMENT == "development" and not TESTING:
     INSTALLED_APPS += ["debug_toolbar"]
     MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
     DEBUG_TOOLBAR_PANELS = [
@@ -268,7 +300,6 @@ if ENVIRONMENT == "development":
         "debug_toolbar.panels.logging.LoggingPanel",
         "debug_toolbar.panels.redirects.RedirectsPanel",
     ]
-    #    DEBUG_TOOLBAR_CONFIG = {"RESULTS_CACHE_SIZE": 0}
 
     import socket
 

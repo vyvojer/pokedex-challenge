@@ -4,7 +4,6 @@
 
 dockerfiles/
 ngnix_config/
-ansible/
 
 _postgres_data/
 /static/
