@@ -178,6 +178,9 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1",
 }
 
+# PAGINATION (not DRF)
+
+PAGE_SIZE = int(os.environ.get("PAGE_SIZE", 10))
 
 # DATA SOURCES
 

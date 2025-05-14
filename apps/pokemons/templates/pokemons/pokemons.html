@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 <form method="get" id="filter-form" hx-get="{% url 'pokemons:pokemon_list' %}" hx-target="#pokemon-list"
-                      hx-trigger="submit, change">
+                      hx-trigger="submit, change, page-changed from:body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -26,28 +26,10 @@
                                        hx-trigger="keyup delay:250ms changed">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="id_o" class="form-label">Order by</label>
-                                <select name="o" id="id_o" class="form-select">
-                                    <option value="">---------</option>
-                                    <option value="id" {% if filter.form.o.value == 'id' %}selected{% endif %}>ID
-                                        (ascending)
-                                    </option>
-                                    <option value="-id" {% if filter.form.o.value == '-id' %}selected{% endif %}>ID
-                                        (descending)
-                                    </option>
-                                    <option value="name" {% if filter.form.o.value == 'name' %}selected{% endif %}>Name
-                                        (A-Z)
-                                    </option>
-                                    <option value="-name" {% if filter.form.o.value == '-name' %}selected{% endif %}>
-                                        Name (Z-A)
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     <a href="{% url 'pokemons:pokemon_list' %}" class="btn btn-primary">Reset</a>
+                    <input id="page-input" type="hidden" name="page" value="1">
+                    <input id="order-input" type="hidden" name="o" value="">
                 </form>
             </div>
         </div>
