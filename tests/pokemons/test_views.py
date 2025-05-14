@@ -1,6 +1,20 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from factories.pokemons import PokemonFactory
+
+
+class PokemonDetailViewTest(TestCase):
+    def setUp(self):
+        self.pokemon = PokemonFactory()
+
+    def test_get(self):
+        response = self.client.get(reverse("pokemons:pokemon_detail", kwargs={"pk": 1}))
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, self.pokemon.name)
+
 
 class ChangePageViewTest(TestCase):
     def test_get(self):

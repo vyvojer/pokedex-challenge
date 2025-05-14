@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from django_filters.views import FilterView
 from pokemons import services
 from pokemons.filters import PokemonFilter
@@ -27,6 +27,11 @@ class PokemonListView(FilterView, ListView):
         if self.request.headers.get("HX-Request"):
             return ["pokemons/pokemon_list.html"]
         return [self.template_name]
+
+
+class PokemonDetailView(DetailView):
+    model = Pokemon
+    template_name = "pokemons/pokemon_detail.html"
 
 
 def change_page(request, page: int) -> HttpResponse:
