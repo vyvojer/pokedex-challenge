@@ -26,6 +26,16 @@
                                        hx-trigger="keyup delay:250ms changed">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_types__name__icontains" class="form-label">Type name</label>
+                                <input type="text" name="types__name__icontains" id="id_types__name__icontains" class="form-control"
+                                       value="{{ filter.form.types__name__icontains.value|default:'' }}"
+                                       hx-get="{% url 'pokemons:pokemon_list' %}"
+                                       hx-target="#pokemon-list"
+                                       hx-trigger="keyup delay:250ms changed">
+                            </div>
+                        </div>
                     </div>
                     <a href="{% url 'pokemons:pokemon_list' %}" class="btn btn-primary">Reset</a>
                     <input id="page-input" type="hidden" name="page" value="1">

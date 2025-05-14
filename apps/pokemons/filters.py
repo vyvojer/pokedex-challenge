@@ -15,4 +15,5 @@ class PokemonFilter(django_filters.FilterSet):
         fields = {
             "id": ["contains"],
             "name": ["icontains"],
+            "types__name": ["icontains"],
         }
