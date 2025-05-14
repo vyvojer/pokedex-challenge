@@ -1,6 +1,9 @@
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView
 from django_filters.views import FilterView
+from pokemons import services
 from pokemons.filters import PokemonFilter
 from pokemons.models import Pokemon
 
@@ -14,7 +17,7 @@ class PokemonListView(FilterView, ListView):
     queryset = Pokemon.objects.prefetched()
     template_name = "pokemons/pokemons.html"
     context_object_name = "pokemons"
-    paginate_by = 30
+    paginate_by = settings.PAGE_SIZE
     filterset_class = PokemonFilter
 
     def get_template_names(self):
@@ -24,3 +27,17 @@ class PokemonListView(FilterView, ListView):
         if self.request.headers.get("HX-Request"):
             return ["pokemons/pokemon_list.html"]
         return [self.template_name]
+
+
+def change_page(request, page: int) -> HttpResponse:
+    html = f'<input id="page-input" type="hidden" name="page" value="{page}">'
+    # We set the HX-Trigger-After-Swap header to trigger list reload after "page-input" has been swapped.
+    # See the form "hx-trigger"
+    return HttpResponse(html, headers={"HX-Trigger-After-Swap": "page-changed"})
+
+
+def change_order(request, field: str) -> HttpResponse:
+    o = request.GET.get("o", None)
+    ordering = services.change_filter_ordering(ordering=o, field=field)
+    html = f'<input id="order-input" type="hidden" name="o" value="{ordering}">'
+    return HttpResponse(html, headers={"HX-Trigger-After-Swap": "page-changed"})
