@@ -1,0 +1,77 @@
+<h1 class="mb-4">Pokémon Comparison</h1>
+
+
+<div class="card mb-4">
+
+    <div class="card-header">
+        <h5 class="mb-0">Select a Pokémon</h5>
+    </div>
+
+    <div class="card-body">
+        <form method="get" id="filter-form">
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        <label for="id_name__icontains" class="form-label">Search by Name</label>
+                        <input type="text" name="name__icontains" id="id_name__icontains" class="form-control"
+                               placeholder="{% if is_full %}Remove one Pokémon to add a new one.{% else %}Start typing a Pokémon name and click to select it...{% endif %}"
+                               {% if is_full %}disabled{% endif %}
+                               value="{{ filter.form.name__icontains.value|default:'' }}"
+                               hx-get="{% url 'pokemons:comparison_pokemon_list' %}"
+                               hx-target="#comparison-pokemon-list"
+                               hx-trigger="keyup delay:150ms changed">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="comparison-pokemon-list" class="col-md-6">
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Selected Pokémons</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            {% for pokemon in pokemons %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-header position-relative">
+                            <h5 class="card-title mb-0">{{ pokemon.name }}</h5>
+                            <a href="#" class="position-absolute top-0 end-0 p-2 text-white"
+                               hx-get="{% url 'pokemons:comparison_remove_pokemon' pokemon.id %}"
+                               hx-trigger="click"
+                               hx-target="#pokemons"
+                               title="Remove from comparison">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white"
+                                     class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <div class="card-body">
+                            <p><strong>ID:</strong> {{ pokemon.id }}</p>
+                            <p><strong>Type:</strong>
+                                {% for type in pokemon.types.all %}
+                                    {{ type.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p>No Pokémons selected.</p>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+

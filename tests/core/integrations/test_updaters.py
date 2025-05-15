@@ -2,7 +2,7 @@ from django.test import TestCase
 from pokemons.models import Pokemon, PokemonType, Type
 
 from core.integrations.updaters import PokemonUpdater
-from factories.pokemons import PokemonFactory
+from tests.factories.pokemons import PokemonFactory
 
 
 class PokemonUpdaterTestCase(TestCase):

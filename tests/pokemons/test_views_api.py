@@ -1,10 +1,9 @@
-from django.test import override_settings
 from django.urls import reverse
-from pokemons.models import Pokemon, PokemonType, Type
+from pokemons.models import PokemonType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from factories.pokemons import PokemonFactory, TypeFactory
+from tests.factories.pokemons import PokemonFactory, TypeFactory
 
 
 class TypeListAPIViewTest(APITestCase):

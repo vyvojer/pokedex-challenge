@@ -1,0 +1,5 @@
+<ul class="list-group">
+    {% for pokemon in pokemons|slice:":8" %}
+        <li class="list-group-item list-group-item-action" hx-get="{% url 'pokemons:comparison_add_pokemon' pk=pokemon.id %}" hx-target="#comparison-pokemon-list">{{ pokemon.name }}</li>
+    {% endfor %}
+</ul>
