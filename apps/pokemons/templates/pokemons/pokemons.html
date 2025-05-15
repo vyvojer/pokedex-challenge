@@ -23,7 +23,7 @@
                                        value="{{ filter.form.name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
-                                       hx-trigger="keyup delay:250ms changed">
+                                       hx-trigger="keyup delay:150ms changed">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -34,7 +34,7 @@
                                        value="{{ filter.form.types__name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
-                                       hx-trigger="keyup delay:250ms changed">
+                                       hx-trigger="keyup delay:150ms changed">
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from factories.pokemons import PokemonFactory
+from factories.pokemons import PokemonFactory, TypeFactory
 
 
 class PokemonDetailViewTest(TestCase):
@@ -39,3 +39,16 @@ class ChangeOrderViewTest(TestCase):
             response, '<input id="order-input" type="hidden" name="o" value="-name,id">'
         )
         self.assertEqual(response.headers.get("HX-Trigger-After-Swap"), "page-changed")
+
+
+class TypeDetailViewTest(TestCase):
+    def setUp(self):
+        self.type = TypeFactory()
+
+    def test_get(self):
+        response = self.client.get(
+            reverse("pokemons:type_detail", kwargs={"pk": self.type.id})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.type.name)

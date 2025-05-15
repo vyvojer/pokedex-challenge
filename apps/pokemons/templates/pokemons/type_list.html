@@ -1,7 +1,7 @@
-<!-- Pokemon List Table -->
+<!-- Type List Table -->
 <div class="card">
     <div class="card-header">
-        <h5 class="card-title mb-0">Pokemon List</h5>
+        <h5 class="card-title mb-0">Type List</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -14,32 +14,26 @@
                             ID
                         </a>
                     </th>
-                    <th style="width: 34%">
+                    <th style="width: 84%">
                         <a href="#" hx-get="{% url 'pokemons:change_order' field='name' %}" hx-target="#order-input"
                            hx-swap="outerHTML" hx-include="#order-input">
                             Name
                         </a>
                     </th>
-                    <th style="width: 50%">Types</th>
                     <th  style="width: 6%"></th>
                 </thead>
                 <tbody>
-                {% for pokemon in pokemons %}
+                {% for type in types %}
                     <tr>
-                        <td>{{ pokemon.id }}</td>
-                        <td>{{ pokemon.name }}</td>
+                        <td>{{ type.id }}</td>
+                        <td>{{ type.name }}</td>
                         <td>
-                            {% for type in pokemon.types.all %}
-                                <span class="badge bg-primary me-1">{{ type.name }}</span>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" type="button"  hx-get="{% url 'pokemons:pokemon_detail' pk=pokemon.id %}" hx-target="#dialog">Detail</button>
+                            <button class="btn btn-primary btn-sm" type="button" hx-get="{% url 'pokemons:type_detail' pk=type.id %}" hx-target="#dialog">Detail</button>
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">No pokemons found.</td>
+                        <td colspan="3" class="text-center">No types found.</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -3,7 +3,7 @@ from pokemons.querysets import PokemonQuerySet
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, db_index=True)
 
     class Meta:
         ordering = ["name"]
