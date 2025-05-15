@@ -1,3 +1,3 @@
 #!/bin/bash
 
-black --check --extend-exclude=migrations ./apps ./tests ./factories
+black --check --extend-exclude=migrations ./apps ./tests

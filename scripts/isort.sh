@@ -1,3 +1,3 @@
 #!/bin/bash
 
-isort -c   ./apps ./tests ./factories
+isort -c   ./apps ./tests

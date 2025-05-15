@@ -1,0 +1,12 @@
+{% extends 'pokedex/base.html' %}
+{% load static %}
+
+{% block title %}Pokémon Comparison{% endblock %}
+
+{% block content %}
+    <div class="container" id="pokemons" hx-get="{% url 'pokemons:comparison' %}" hx-target="this"
+         hx-trigger="pokemon-added-or-removed from:body">
+        {% include 'pokemons/comparison_pokemons.html' %}
+    </div>
+
+{% endblock %}

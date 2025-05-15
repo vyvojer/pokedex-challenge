@@ -20,6 +20,7 @@
                             <div class="mb-3">
                                 <label for="id_name__icontains" class="form-label">Name</label>
                                 <input type="text" name="name__icontains" id="id_name__icontains" class="form-control"
+                                       placeholder="Start typing a Pokémon type..."
                                        value="{{ filter.form.name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:type_list' %}"
                                        hx-target="#type-list"

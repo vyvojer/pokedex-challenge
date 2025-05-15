@@ -1,11 +1,11 @@
 {% extends 'pokedex/base.html' %}
 {% load static %}
 
-{% block title %}Pokemon List{% endblock %}
+{% block title %}Pokémon List{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 class="mb-4">Pokemon List</h1>
+        <h1 class="mb-4">Pokémon List</h1>
 
         <!-- Filter Form -->
         <div class="card mb-4">
@@ -20,6 +20,7 @@
                             <div class="mb-3">
                                 <label for="id_name__icontains" class="form-label">Name</label>
                                 <input type="text" name="name__icontains" id="id_name__icontains" class="form-control"
+                                       placeholder="Start typing a Pokémon name..."
                                        value="{{ filter.form.name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
@@ -28,9 +29,10 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="id_types__name__icontains" class="form-label">Type name</label>
+                                <label for="id_types__name__icontains" class="form-label">Type</label>
                                 <input type="text" name="types__name__icontains" id="id_types__name__icontains"
                                        class="form-control"
+                                       placeholder="Start typing a Pokémon type..."
                                        value="{{ filter.form.types__name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
