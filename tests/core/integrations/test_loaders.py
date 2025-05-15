@@ -3,7 +3,11 @@ from unittest.mock import Mock, patch
 
 import requests
 
-from core.integrations.loaders import EntityLoader, LoaderException, PageLoader
+from core.integrations.loaders import (
+    DefaultEntityLoader,
+    DefaultPageLoader,
+    LoaderException,
+)
 
 
 @patch("core.integrations.loaders.requests.get")
@@ -24,7 +28,7 @@ class PageLoaderTest(TestCase):
             status_code=200, json=Mock(return_value=response_data)
         )
 
-        loader = PageLoader(url="https://pokeapi.co/api/v2/pokemon/")
+        loader = DefaultPageLoader(url="https://pokeapi.co/api/v2/pokemon/")
         entity_urls, next_url = loader.load()
 
         self.assertEqual(
@@ -56,7 +60,7 @@ class PageLoaderTest(TestCase):
             status_code=200, json=Mock(return_value=response_data)
         )
 
-        loader = PageLoader(url="https://pokeapi.co/api/v2/pokemon/")
+        loader = DefaultPageLoader(url="https://pokeapi.co/api/v2/pokemon/")
         entity_urls, next_url = loader.load()
 
         self.assertEqual(next_url, None)
@@ -66,7 +70,7 @@ class PageLoaderTest(TestCase):
     def test_load_pokemons__status_is_not_200__raise_loader_exception(self, mocked_get):
         mocked_get.return_value = Mock(status_code=500, json=Mock(return_value={}))
 
-        loader = PageLoader(url="https://pokeapi.co/api/v2/pokemon/")
+        loader = DefaultPageLoader(url="https://pokeapi.co/api/v2/pokemon/")
 
         with self.assertRaises(LoaderException):
             loader.load()
@@ -76,7 +80,7 @@ class PageLoaderTest(TestCase):
     ):
         mocked_get.side_effect = requests.exceptions.RequestException()
 
-        loader = PageLoader(url="https://pokeapi.co/api/v2/pokemon/")
+        loader = DefaultPageLoader(url="https://pokeapi.co/api/v2/pokemon/")
 
         with self.assertRaises(LoaderException):
             loader.load()
@@ -96,7 +100,7 @@ class EntityLoaderTest(TestCase):
             status_code=200, json=Mock(return_value=response_data)
         )
 
-        loader = EntityLoader(url="https://pokeapi.co/api/v2/pokemon/1/")
+        loader = DefaultEntityLoader(url="https://pokeapi.co/api/v2/pokemon/1/")
         result = loader.load()
 
         self.assertEqual(result, response_data)

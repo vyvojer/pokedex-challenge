@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.views.generic import DetailView, ListView, TemplateView
 from django_filters.views import FilterView
 from pokemons import services
-from pokemons.filters import PokemonFilter, TypeFilter
-from pokemons.models import Pokemon, Type
+from pokemons.filters import AbilityFilter, PokemonFilter, TypeFilter
+from pokemons.models import Ability, Pokemon, Type
 
 
 class PokemonListView(FilterView, ListView):
@@ -71,6 +71,32 @@ class TypeListView(FilterView, ListView):
 class TypeDetailView(DetailView):
     model = Type
     template_name = "pokemons/type_detail.html"
+
+
+class AbilityListView(FilterView, ListView):
+    """
+    HTMX-based list view for Ability model with filtering and pagination.
+    """
+
+    model = Ability
+    queryset = Ability.objects.all()
+    template_name = "pokemons/abilities.html"
+    context_object_name = "abilities"
+    paginate_by = settings.PAGE_SIZE
+    filterset_class = AbilityFilter
+
+    def get_template_names(self):
+        """
+        Return different template names based on whether the request is an HTMX request.
+        """
+        if self.request.headers.get("HX-Request"):
+            return ["pokemons/ability_list.html"]
+        return [self.template_name]
+
+
+class AbilityDetailView(DetailView):
+    model = Ability
+    template_name = "pokemons/ability_detail.html"
 
 
 class ComparisonView(TemplateView):

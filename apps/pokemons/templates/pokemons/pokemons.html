@@ -24,9 +24,12 @@
                                        value="{{ filter.form.name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
+                                       hx-include="#filter-form"
                                        hx-trigger="keyup delay:150ms changed">
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="id_types__name__icontains" class="form-label">Type</label>
@@ -36,6 +39,20 @@
                                        value="{{ filter.form.types__name__icontains.value|default:'' }}"
                                        hx-get="{% url 'pokemons:pokemon_list' %}"
                                        hx-target="#pokemon-list"
+                                       hx-include="#filter-form"
+                                       hx-trigger="keyup delay:150ms changed">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_abilities__name__icontains" class="form-label">Ability</label>
+                                <input type="text" name="abilities__name__icontains" id="id_abilities__name__icontains"
+                                       class="form-control"
+                                       placeholder="Start typing a Pokémon ability..."
+                                       value="{{ filter.form.abilities__name__icontains.value|default:'' }}"
+                                       hx-get="{% url 'pokemons:pokemon_list' %}"
+                                       hx-target="#pokemon-list"
+                                       hx-include="#filter-form"
                                        hx-trigger="keyup delay:150ms changed">
                             </div>
                         </div>

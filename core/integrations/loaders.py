@@ -11,7 +11,7 @@ class LoaderException(Exception):
     pass
 
 
-class PageLoader:
+class DefaultPageLoader:
     def __init__(self, url: str, **kwargs):
         self.url = url
         self.kwargs = kwargs
@@ -58,7 +58,7 @@ class PageLoader:
         return entity_urls, next_url
 
 
-class EntityLoader:
+class DefaultEntityLoader:
     def __init__(self, url: str, **kwargs):
         self.url = url
         self.kwargs = kwargs

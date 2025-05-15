@@ -1,31 +1,40 @@
-from unittest.mock import Mock, patch
-
 from django.test import SimpleTestCase, override_settings
-from django.utils.module_loading import import_string
 from pokemons.models import Pokemon
 
 from core.integrations.factories import DataSourceFactory
-from core.integrations.loaders import EntityLoader, PageLoader
-from core.integrations.transformers import PokemonTransformer
-from core.integrations.updaters import PokemonUpdater
+from core.integrations.loaders import DefaultEntityLoader, DefaultPageLoader
+from core.integrations.transformers import BaseTransformer
+from core.integrations.updaters import DefaultUpdater
+
+
+class DummyTransformer(BaseTransformer):
+
+    def transform(self) -> dict:
+        return {}
+
+
+class DummyUpdater(DefaultUpdater):
+    def handle_many_to_many_fields(self) -> None:
+        pass
+
 
 # Test settings for DATA_SOURCES
 TEST_DATA_SOURCES = {
     "test_source": {
         "page_loader": {
-            "class": "core.integrations.loaders.PageLoader",
+            "class": "core.integrations.loaders.DefaultPageLoader",
             "kwargs": {"url": "https://test-api.com/items/"},
         },
         "entity_loader": {
-            "class": "core.integrations.loaders.EntityLoader",
+            "class": "core.integrations.loaders.DefaultEntityLoader",
             "kwargs": {"extra_param": "value"},
         },
         "transformer": {
-            "class": "core.integrations.transformers.PokemonTransformer",
+            "class": "tests.core.integrations.test_factories.DummyTransformer",
             "kwargs": {"extra_param": "value"},
         },
         "updater": {
-            "class": "core.integrations.updaters.PokemonUpdater",
+            "class": "tests.core.integrations.test_factories.DummyUpdater",
             "kwargs": {"model_name": "pokemons.Pokemon"},
         },
     }
@@ -41,7 +50,7 @@ class DataSourceFactoryTest(SimpleTestCase):
         factory = DataSourceFactory("test_source")
         loader = factory.get_page_loader()
 
-        self.assertTrue(isinstance(loader, PageLoader))
+        self.assertTrue(isinstance(loader, DefaultPageLoader))
         self.assertEqual(loader.url, "https://test-api.com/items/")
 
     @override_settings(DATA_SOURCES=TEST_DATA_SOURCES)
@@ -58,7 +67,7 @@ class DataSourceFactoryTest(SimpleTestCase):
         url = "https://test-api.com/items/123/"
         loader = factory.get_entity_loader(url=url)
 
-        self.assertTrue(isinstance(loader, EntityLoader))
+        self.assertTrue(isinstance(loader, DefaultEntityLoader))
         self.assertEqual(loader.url, url)
 
     @override_settings(DATA_SOURCES=TEST_DATA_SOURCES)
@@ -67,7 +76,7 @@ class DataSourceFactoryTest(SimpleTestCase):
         data = {"id": 1, "name": "test_pokemon", "types": []}
         transformer = factory.get_transformer(data=data)
 
-        self.assertTrue(isinstance(transformer, PokemonTransformer))
+        self.assertTrue(isinstance(transformer, DummyTransformer))
         self.assertEqual(transformer.data, data)
         self.assertEqual(transformer.kwargs["extra_param"], "value")
 
@@ -77,6 +86,6 @@ class DataSourceFactoryTest(SimpleTestCase):
         data = {"id": 1, "name": "test_pokemon", "types": []}
         updater = factory.get_updater(data=data)
 
-        self.assertTrue(isinstance(updater, PokemonUpdater))
+        self.assertTrue(isinstance(updater, DummyUpdater))
         self.assertEqual(updater.data, data)
         self.assertEqual(updater.model, Pokemon)
