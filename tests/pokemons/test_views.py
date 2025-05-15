@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from tests.factories.pokemons import PokemonFactory, TypeFactory
+from tests.factories.pokemons import AbilityFactory, PokemonFactory, TypeFactory
 
 
 class PokemonDetailViewTest(TestCase):
@@ -54,6 +54,19 @@ class TypeDetailViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.type.name)
+
+
+class AbilityDetailViewTest(TestCase):
+    def setUp(self):
+        self.ability = AbilityFactory()
+
+    def test_get(self):
+        response = self.client.get(
+            reverse("pokemons:ability_detail", kwargs={"pk": self.ability.id})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.ability.name)
 
 
 class ComparisonViewTest(TestCase):

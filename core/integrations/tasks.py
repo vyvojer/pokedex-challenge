@@ -32,11 +32,11 @@ def load_page_task(self, source: str, page_url: str | None = None) -> None:
     if next_url is None:
         canvas = entity_group
     else:
-        canvas = entity_group | load_page_task.si(
-            source, next_url
-        )  # add recurse invoke
+        canvas = group(
+            entity_group, load_page_task.si(source, next_url)  # add recurse invoke
+        )
 
-    self.replace(canvas)
+        self.replace(canvas)
 
 
 @shared_task(

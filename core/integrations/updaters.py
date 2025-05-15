@@ -1,13 +1,11 @@
-from abc import ABC, abstractmethod
-
 from django.apps import apps
 from django.db import IntegrityError
 from django.db.models import Model
-from pokemons.models import PokemonType, Type
 
 
-class BaseUpdater(ABC):
-    MANY_TO_MANY_FIELDS = []
+class DefaultUpdater:
+    many_to_many_fields = []
+    fk_fields = []
 
     def __init__(self, model_name: str, data: dict, **kwargs: dict):
         self.data = data
@@ -20,12 +18,13 @@ class BaseUpdater(ABC):
         model_data = {
             field: self.data[field]
             for field in self.data
-            if field not in self.MANY_TO_MANY_FIELDS
+            if field not in self.many_to_many_fields
         }
         self.instance = self.create_or_update_without_race_condition(
             self.model, model_data
         )
-        self.handle_many_to_many_fields()
+        if self.many_to_many_fields:
+            self.handle_many_to_many_fields()
 
     @staticmethod
     def create_or_update_without_race_condition(model: type, data: dict) -> Model:
@@ -40,23 +39,5 @@ class BaseUpdater(ABC):
                 instance = model.objects.get(id=data["id"])
         return instance
 
-    @abstractmethod
     def handle_many_to_many_fields(self) -> None:
-        raise NotImplementedError
-
-
-class PokemonUpdater(BaseUpdater):
-    MANY_TO_MANY_FIELDS = ["types"]
-
-    def handle_many_to_many_fields(self) -> None:
-        for type_slot_data in self.data["types"]:
-            slot = type_slot_data["slot"]
-            type_data = type_slot_data["type"]
-            type_ = self.create_or_update_without_race_condition(
-                model=Type, data=type_data
-            )
-            PokemonType.objects.update_or_create(
-                pokemon=self.instance,
-                type=type_,
-                defaults={"slot": slot},
-            )
+        pass

@@ -191,20 +191,36 @@ COMPARISON_MAX_POKEMON_NUMBER = int(os.environ.get("COMPARISON_MAX_POKEMON_NUMBE
 DATA_SOURCES = {
     "pokemon": {
         "page_loader": {
-            "class": "core.integrations.loaders.PageLoader",
+            "class": "core.integrations.loaders.DefaultPageLoader",
             "kwargs": {"url": "https://pokeapi.co/api/v2/pokemon/"},
         },
         "entity_loader": {
-            "class": "core.integrations.loaders.EntityLoader",
+            "class": "core.integrations.loaders.DefaultEntityLoader",
         },
         "transformer": {
-            "class": "core.integrations.transformers.PokemonTransformer",
+            "class": "pokemons.integrations.transformers.PokemonTransformer",
         },
         "updater": {
-            "class": "core.integrations.updaters.PokemonUpdater",
+            "class": "pokemons.integrations.updaters.PokemonUpdater",
             "kwargs": {"model_name": "pokemons.Pokemon"},
         },
-    }
+    },
+    "ability": {
+        "page_loader": {
+            "class": "core.integrations.loaders.DefaultPageLoader",
+            "kwargs": {"url": "https://pokeapi.co/api/v2/ability/"},
+        },
+        "entity_loader": {
+            "class": "core.integrations.loaders.DefaultEntityLoader",
+        },
+        "transformer": {
+            "class": "pokemons.integrations.transformers.AbilityTransformer",
+        },
+        "updater": {
+            "class": "core.integrations.updaters.DefaultUpdater",
+            "kwargs": {"model_name": "pokemons.Ability"},
+        },
+    },
 }
 
 # LOGGING
