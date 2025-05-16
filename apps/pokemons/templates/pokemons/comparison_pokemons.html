@@ -57,10 +57,20 @@
                         </div>
 
                         <div class="card-body">
+                            {% if pokemon.front_sprite %}
+                                <div class="mb-3 text-center">
+                                    <img src="{{ pokemon.front_sprite }}" alt="{{ pokemon.name }} sprite"
+                                         class="img-fluid">
+                                </div>
+                            {% endif %}
                             <p><strong>ID:</strong> {{ pokemon.id }}</p>
-                            <p><strong>Type:</strong>
+                            <p><strong>Types:</strong>
                                 {% for type in pokemon.types.all %}
                                     {{ type.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            <p><strong>Abilities:</strong>
+                                {% for ability in pokemon.abilities.all %}
+                                    {{ ability.name }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </p>
                         </div>
