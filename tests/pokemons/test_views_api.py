@@ -3,7 +3,7 @@ from pokemons.models import PokemonType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from tests.factories.pokemons import PokemonFactory, TypeFactory
+from tests.factories.pokemons import AbilityFactory, PokemonFactory, TypeFactory
 
 
 class TypeListAPIViewTest(APITestCase):
@@ -103,6 +103,45 @@ class PokemonDetailViewTest(APITestCase):
 
     def test_get_invalid_pokemon(self):
         invalid_url = reverse("pokemons_api:pokemon-detail", kwargs={"pk": 999})
+        response = self.client.get(invalid_url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class AbilityListAPIViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("pokemons_api:ability-list")
+
+        self.ability1 = AbilityFactory(name="Blaze")
+        self.ability2 = AbilityFactory(name="Torrent")
+        self.ability3 = AbilityFactory(name="Overgrow")
+
+    def test_get_all_abilities(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        ability_names = [a["name"] for a in response.data["results"]]
+        self.assertIn("Blaze", ability_names)
+        self.assertIn("Torrent", ability_names)
+        self.assertIn("Overgrow", ability_names)
+
+
+class AbilityDetailAPIViewTest(APITestCase):
+    def setUp(self):
+        self.ability = AbilityFactory(name="Solar Power")
+        self.url = reverse(
+            "pokemons_api:ability-detail", kwargs={"pk": self.ability.pk}
+        )
+
+    def test_get_valid_ability(self):
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], "Solar Power")
+
+    def test_get_invalid_ability(self):
+        invalid_url = reverse("pokemons_api:ability-detail", kwargs={"pk": 999})
         response = self.client.get(invalid_url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
