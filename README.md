@@ -71,7 +71,7 @@ Follow the prompts to create a superuser account.
 ### Run command for adding periodic tasks
 
 ```bash
-docker-compose exec app python manage.py create_periodic_tasks
+docker compose exec app python manage.py create_periodic_tasks
 ```
 
 This command creates periodic tasks for data synchronization from PokeAPI.
@@ -154,7 +154,7 @@ http://localhost/api/v1/schema/swagger-ui/
 To run tests using Docker Compose:
 
 ```bash
-docker compose exec app test
+docker compose run --rm  app python manage.py test
 ```
 
 This will run the Django test suite.
